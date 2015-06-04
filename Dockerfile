@@ -31,7 +31,7 @@ WORKDIR /app
 
 
 # Install Go 1.4.2
-RUN mkdir -p /kubernetes/golang \
+RUN mkdir -p /kubernetes/go \
 	&& curl -L http://dave.cheney.net/paste/go1.4.2.linux-arm~multiarch-armv7-1.tar.gz > /kubernetes/go/go1.4.2.tar.gz \
 	&& tar -C /usr/local -xzf /kubernetes/go/go1.4.2.tar.gz \
 	&& ln -s /usr/local/go/bin/go /usr/bin/go \
