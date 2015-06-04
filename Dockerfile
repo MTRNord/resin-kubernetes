@@ -36,7 +36,7 @@ RUN mkdir -p /kubernetes/go \
 	&& tar -C /usr/local -xzf /kubernetes/go/go1.4.2.tar.gz \
 	&& ln -s /usr/local/go/bin/go /usr/bin/go \
 	&& ln -s /usr/local/go/bin/godoc /usr/bin/godoc \
-	&& ln -s /usr/local/go/bin/gofmt /usr/bin/gofmt \
+	&& ln -s /usr/local/go/bin/gofmt /usr/bin/gofmt
 
 ENV KUBERNETES_VERSION v0.18.1
 RUN cd /kubernetes \
