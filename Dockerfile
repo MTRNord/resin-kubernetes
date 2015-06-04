@@ -40,7 +40,7 @@ RUN mkdir -p /kubernetes/go \
 
 ENV KUBERNETES_VERSION v0.18.1
 RUN cd /kubernetes \
-	&& curl -L https://github.com/GoogleCloudPlatform/kubernetes/archive/$KUBERNETES_VERSION.tar.gz \
+	&& curl -L https://github.com/GoogleCloudPlatform/kubernetes/archive/$KUBERNETES_VERSION.tar.gz > $KUBERNETES_VERSION.tar.gz  \
 	&& tar -xzf $KUBERNETES_VERSION.tar.gz
 	&& cd kubernetes* \
 	&& make
