@@ -109,7 +109,7 @@ done
 
 #[[ $1 ]] && exec "$@"
 
-/hyperkube kubelet --api_servers=http://${MASTER_IP}:8080 --v=2 --address=0.0.0.0 --enable_server --hostname_override=$(hostname -i) &
+/hyperkube kubelet --api_servers=http://${MASTER_IP}:8080 --v=2 --address=0.0.0.0 --enable_server --hostname_override=$RESIN_DEVICE_UUID &
 /hyperkube proxy --master=http://${MASTER_IP}:8080 --v=2 &
 
 dropbear -E -F
