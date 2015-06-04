@@ -121,4 +121,9 @@ done
 /hyperkube kubelet --api_servers=http://${MASTER_IP}:8080 --v=2 --address=0.0.0.0 --enable_server --hostname_override=$RESIN_DEVICE_UUID &
 /hyperkube proxy --master=http://${MASTER_IP}:8080 --v=2 &
 
+#Set the root password as root if not set as an ENV variable
+export PASSWD=${PASSWD:=root}
+#Set the root password
+echo "root:$PASSWD" | chpasswd
+
 dropbear -E -F
