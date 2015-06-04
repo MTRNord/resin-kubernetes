@@ -1,5 +1,14 @@
 #!/bin/bash
 
+if [ ! -f /hyperkube ]
+then
+	cd /kubernetes/kubernetes* \
+	&& make \
+	&& cp ./_output/local/bin/linux/arm/hyperkube / \
+	&& cp ./_output/local/bin/linux/arm/kubectl /
+fi
+
+
 # Ensure that all nodes in /dev/mapper correspond to mapped devices currently loaded by the device-mapper kernel driver
 dmsetup mknodes
 
