@@ -1,10 +1,8 @@
-Multi containers example.
+Multi containers + Kubernetes.
 
 THIS IS WORK IN PROGRESS
 
-The application starts a docker-in-docker instance and runs docker-compose.
-docker-compose then builds and runs the containers.
+The application starts a docker-in-docker instance and runs a Kubernetes kubelet.
 
-You can edit docker-compose.yml to add the containers you need.
-
+Based on [abresas/multi-container](https://github.com/abresas/multi-container)
 For docker in docker, check [jpetazzo/dind](https://github.com/jpetazzo/dind).

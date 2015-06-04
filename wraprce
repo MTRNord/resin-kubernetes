@@ -102,9 +102,14 @@ do
 	sleep 1
 done
 
-if [ -e "docker-compose.yml" ]
-then
-	DOCKER_HOST=unix:///var/run/rce.sock docker-compose up -d
-fi
+#if [ -e "docker-compose.yml" ]
+#then
+#	DOCKER_HOST=unix:///var/run/rce.sock docker-compose up -d
+#fi
 
-[[ $1 ]] && exec "$@"
+#[[ $1 ]] && exec "$@"
+
+/hyperkube kubelet --api_servers=http://${MASTER_IP}:8080 --v=2 --address=0.0.0.0 --enable_server --hostname_override=$(hostname -i) &
+/hyperkube proxy --master=http://${MASTER_IP}:8080 --v=2 &
+
+dropbear -E -F
