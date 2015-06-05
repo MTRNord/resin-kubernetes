@@ -38,18 +38,21 @@ RUN cd /kubernetes \
 	&& ln -s /kubernetes/go/bin/linux_arm/go /usr/bin/go \
 	&& ln -s /kubernetes/go/bin/linux_arm/gofmt /usr/bin/gofmt
 
-COPY ./linux_arm /kubernetes/go/pkg/tool/linux_arm
+#COPY ./linux_arm /kubernetes/go/pkg/tool/linux_arm
 
 ENV GOROOT /kubernetes/go
 
 ENV KUBERNETES_VERSION v0.18.1
-RUN cd /kubernetes \
-	&& curl -L https://github.com/GoogleCloudPlatform/kubernetes/archive/$KUBERNETES_VERSION.tar.gz > $KUBERNETES_VERSION.tar.gz  \
-	&& tar -xzf $KUBERNETES_VERSION.tar.gz \
-	&& cd /kubernetes/kubernetes* \
-	&& make \
-	&& cp ./_output/local/bin/linux/arm/hyperkube / \
-	&& cp ./_output/local/bin/linux/arm/kubectl /
+#RUN cd /kubernetes \
+#	&& curl -L https://github.com/GoogleCloudPlatform/kubernetes/archive/$KUBERNETES_VERSION.tar.gz > $KUBERNETES_VERSION.tar.gz  \
+#	&& tar -xzf $KUBERNETES_VERSION.tar.gz \
+#	&& cd /kubernetes/kubernetes* \
+#	&& make \
+#	&& cp ./_output/local/bin/linux/arm/hyperkube / \
+#	&& cp ./_output/local/bin/linux/arm/kubectl /
+
+COPY ./hyperkube /hyperkube
+COPY ./kubectl /kubectl
 
 # Define additional metadata for our image.
 VOLUME /var/lib/rce
