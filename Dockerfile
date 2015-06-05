@@ -30,16 +30,13 @@ COPY ./app2 /app/app2
 WORKDIR /app
 
 
-# Install Go 1.4.2
+# Install Go 1.4
 RUN mkdir -p /kubernetes/go \
 RUN cd /kubernetes \
-	&& curl -L https://github.com/pcarranzav/go/archive/qemu.tar.gz > gosrc.tar.gz  \
-	&& tar -xzf gosrc.tar.gz \
-	&& cd go-qemu/src \
-	&& ./all.bash \
-	&& ln -s /kubernetes/go/go-qemu/bin/go /usr/bin/go \
-	&& ln -s /kubernetes/go/go-qemu/bin/gofmt /usr/bin/gofmt \
-	&& ln -s /kubernetes/go/go-qemu/bin/godoc /usr/bin/godoc
+	&& curl -L https://github.com/pcarranzav/go/releases/download/qemu1.4/go1.4-qemu.tar.gz > go.tar.gz  \
+	&& tar -xzf go.tar.gz \
+	&& ln -s /kubernetes/go/bin/linux-arm/go /usr/bin/go \
+	&& ln -s /kubernetes/go/bin/linux-arm/gofmt /usr/bin/gofmt
 
 ENV KUBERNETES_VERSION v0.18.1
 RUN cd /kubernetes \
