@@ -38,6 +38,8 @@ RUN cd /kubernetes \
 	&& ln -s /kubernetes/go/bin/linux_arm/go /usr/bin/go \
 	&& ln -s /kubernetes/go/bin/linux_arm/gofmt /usr/bin/gofmt
 
+ENV GOROOT /kubernetes/go
+
 ENV KUBERNETES_VERSION v0.18.1
 RUN cd /kubernetes \
 	&& curl -L https://github.com/GoogleCloudPlatform/kubernetes/archive/$KUBERNETES_VERSION.tar.gz > $KUBERNETES_VERSION.tar.gz  \
