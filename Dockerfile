@@ -14,7 +14,7 @@ RUN apt-get update -qq && apt-get install -qqy \
     
 # Install Docker from Docker Inc. repositories.
 COPY ./rce /usr/bin/rce
-CHMOD u+x /usr/bin/rce
+RUN chmod u+x /usr/bin/rce
 RUN ln -s /usr/bin/rce /usr/bin/docker
 
 # Install the magic wrapper.
@@ -32,17 +32,23 @@ WORKDIR /app
 
 # Install Go 1.4.2
 RUN mkdir -p /kubernetes/go \
-	&& curl -L http://dave.cheney.net/paste/go1.4.2.linux-arm~multiarch-armv7-1.tar.gz > /kubernetes/go/go1.4.2.tar.gz \
-	&& tar -C /usr/local -xzf /kubernetes/go/go1.4.2.tar.gz \
-	&& ln -s /usr/local/go/bin/go /usr/bin/go \
-	&& ln -s /usr/local/go/bin/godoc /usr/bin/godoc \
-	&& ln -s /usr/local/go/bin/gofmt /usr/bin/gofmt
+RUN cd /kubernetes \
+	&& curl -L https://github.com/pcarranzav/go/archive/qemu.tar.gz > gosrc.tar.gz  \
+	&& tar -xzf gosrc.tar.gz \
+	&& cd go-qemu/src \
+	&& ./all.bash \
+	&& ln -s /kubernetes/go/go-qemu/bin/go /usr/bin/go \
+	&& ln -s /kubernetes/go/go-qemu/bin/gofmt /usr/bin/gofmt \
+	&& ln -s /kubernetes/go/go-qemu/bin/godoc /usr/bin/godoc
 
 ENV KUBERNETES_VERSION v0.18.1
 RUN cd /kubernetes \
 	&& curl -L https://github.com/GoogleCloudPlatform/kubernetes/archive/$KUBERNETES_VERSION.tar.gz > $KUBERNETES_VERSION.tar.gz  \
-	&& tar -xzf $KUBERNETES_VERSION.tar.gz
-
+	&& tar -xzf $KUBERNETES_VERSION.tar.gz \
+	&& cd /kubernetes/kubernetes* \
+	&& make \
+	&& cp ./_output/local/bin/linux/arm/hyperkube / \
+	&& cp ./_output/local/bin/linux/arm/kubectl /
 
 # Define additional metadata for our image.
 VOLUME /var/lib/rce
