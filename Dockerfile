@@ -54,6 +54,9 @@ ENV KUBERNETES_VERSION v0.18.1
 COPY ./hyperkube /hyperkube
 COPY ./kubectl /kubectl
 
+RUN chmod +x /hyperkube
+RUN chmod +x /kubectl
+
 # Define additional metadata for our image.
 VOLUME /var/lib/rce
 RUN ln -s /var/lib/rce /var/lib/docker

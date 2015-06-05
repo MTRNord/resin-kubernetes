@@ -1,5 +1,9 @@
 #!/bin/bash
 
+HOSTNAME=$RESIN_DEVICE_UUID
+echo "127.0.1.1 $HOSTNAME" >> /etc/hosts
+hostname $HOSTNAME
+
 # Ensure that all nodes in /dev/mapper correspond to mapped devices currently loaded by the device-mapper kernel driver
 dmsetup mknodes
 
@@ -109,7 +113,7 @@ done
 
 #[[ $1 ]] && exec "$@"
 
-/hyperkube kubelet --api_servers=http://${MASTER_IP}:8080 --v=2 --address=0.0.0.0 --enable_server --hostname_override=$RESIN_DEVICE_UUID &
+/hyperkube kubelet --api_servers=http://${MASTER_IP}:8080 --v=2 --address=0.0.0.0 --enable_server --pod-infra-container-image=resin/rpi-raspbian &
 /hyperkube proxy --master=http://${MASTER_IP}:8080 --v=2 &
 
 #Set the root password as root if not set as an ENV variable
