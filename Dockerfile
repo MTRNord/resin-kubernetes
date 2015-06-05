@@ -31,7 +31,7 @@ WORKDIR /app
 
 
 # Install Go 1.4
-RUN mkdir -p /kubernetes/go \
+RUN mkdir -p /kubernetes
 RUN cd /kubernetes \
 	&& curl -L https://github.com/pcarranzav/go/releases/download/qemu1.4/go1.4-qemu.tar.gz > go.tar.gz  \
 	&& tar -xzf go.tar.gz \
