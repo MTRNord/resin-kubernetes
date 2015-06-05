@@ -35,8 +35,8 @@ RUN mkdir -p /kubernetes/go \
 RUN cd /kubernetes \
 	&& curl -L https://github.com/pcarranzav/go/releases/download/qemu1.4/go1.4-qemu.tar.gz > go.tar.gz  \
 	&& tar -xzf go.tar.gz \
-	&& ln -s /kubernetes/go/bin/linux-arm/go /usr/bin/go \
-	&& ln -s /kubernetes/go/bin/linux-arm/gofmt /usr/bin/gofmt
+	&& ln -s /kubernetes/go/bin/linux_arm/go /usr/bin/go \
+	&& ln -s /kubernetes/go/bin/linux_arm/gofmt /usr/bin/gofmt
 
 ENV KUBERNETES_VERSION v0.18.1
 RUN cd /kubernetes \
