@@ -38,6 +38,8 @@ RUN cd /kubernetes \
 	&& ln -s /kubernetes/go/bin/linux_arm/go /usr/bin/go \
 	&& ln -s /kubernetes/go/bin/linux_arm/gofmt /usr/bin/gofmt
 
+COPY ./linux_arm /kubernetes/go/pkg/tool/linux_arm
+
 ENV GOROOT /kubernetes/go
 
 ENV KUBERNETES_VERSION v0.18.1
