@@ -90,6 +90,8 @@ popd >/dev/null
 # delete it so that rce can start.
 rm -rf /var/run/rce.pid
 
+# We should start flannel here
+
 if [ "$LOG" == "file" ]
 then
 	rce -d $DOCKER_DAEMON_ARGS &>/var/log/rce.log &
@@ -113,7 +115,7 @@ done
 
 #[[ $1 ]] && exec "$@"
 
-/hyperkube kubelet --api_servers=http://${MASTER_IP}:8080 --v=2 --address=0.0.0.0 --enable_server --pod-infra-container-image=resin/rpi-raspbian &
+/hyperkube kubelet --api_servers=http://${MASTER_IP}:8080 --v=2 --address=0.0.0.0 --enable_server &
 /hyperkube proxy --master=http://${MASTER_IP}:8080 --v=2 &
 
 #Set the root password as root if not set as an ENV variable

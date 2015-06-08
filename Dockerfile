@@ -42,6 +42,15 @@ RUN cd /kubernetes \
 
 ENV GOROOT /kubernetes/go
 
+ENV FLANNEL_VERSION v0.4.1
+
+RUN cd /kubernetes \
+	&& curl -L https://github.com/coreos/flannel/archive/$FLANNEL_VERSION.tar.gz > $FLANNEL_VERSION.tar.gz  \
+	&& tar -xzf $FLANNEL_VERSION.tar.gz \
+	&& cd /kubernetes/flannel* \
+	&& ./build \
+	&& mv ./bin/flanneld /
+
 ENV KUBERNETES_VERSION v0.18.1
 #RUN cd /kubernetes \
 #	&& curl -L https://github.com/GoogleCloudPlatform/kubernetes/archive/$KUBERNETES_VERSION.tar.gz > $KUBERNETES_VERSION.tar.gz  \
