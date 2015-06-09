@@ -62,9 +62,11 @@ ENV KUBERNETES_VERSION v0.18.1
 
 COPY ./hyperkube /hyperkube
 COPY ./kubectl /kubectl
+COPY ./flanneld /flanneld
 
 RUN chmod +x /hyperkube
 RUN chmod +x /kubectl
+RUN chmod +x /flanneld
 
 # Define additional metadata for our image.
 VOLUME /var/lib/rce
