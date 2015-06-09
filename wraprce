@@ -94,9 +94,9 @@ rm -rf /var/run/rce.pid
 
 if [ "$LOG" == "file" ]
 then
-	rce -d $DOCKER_DAEMON_ARGS &>/var/log/rce.log &
+	rce -d -e lxc $DOCKER_DAEMON_ARGS &>/var/log/rce.log &
 else
-	rce -d $DOCKER_DAEMON_ARGS &
+	rce -d -e lxc $DOCKER_DAEMON_ARGS &
 fi
 (( timeout = 60 + SECONDS ))
 until rce info >/dev/null 2>&1
@@ -115,7 +115,9 @@ done
 
 #[[ $1 ]] && exec "$@"
 
-/hyperkube kubelet --api_servers=http://${MASTER_IP}:8080 --v=2 --address=0.0.0.0 --enable_server &
+/hyperkube kubelet --api_servers=http://${MASTER_IP}:8080 --v=2 \
+	--address=0.0.0.0 --enable_server --docker-endpoint=$DOCKER_HOST &
+
 /hyperkube proxy --master=http://${MASTER_IP}:8080 --v=2 &
 
 #Set the root password as root if not set as an ENV variable
