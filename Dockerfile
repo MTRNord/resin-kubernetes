@@ -1,7 +1,11 @@
 FROM resin/rpi-raspbian
 MAINTAINER abresas@resin.io
 
-# Let's start with some basic stuff.
+ENV DOCKER_HOST unix:///var/run/rce.sock
+ENV FLANNEL_VERSION v0.4.1
+ENV KUBERNETES_VERSION v0.18.1
+
+# Install dependencies
 RUN apt-get update -qq && apt-get install -qqy \
     apt-transport-https \
     ca-certificates \
@@ -10,56 +14,16 @@ RUN apt-get update -qq && apt-get install -qqy \
     iptables \
     rsync \
     build-essential \
-    dropbear
+    dropbear \
+    net-tools \
+    bridge-utils
     
-# Install Docker from Docker Inc. repositories.
+# Install resin.io's rce (docker)
 COPY ./rce /usr/bin/rce
 RUN chmod u+x /usr/bin/rce
 RUN ln -s /usr/bin/rce /usr/bin/docker
 
-# Install the magic wrapper.
-ADD ./wraprce /usr/local/bin/wraprce
-RUN chmod +x /usr/local/bin/wraprce
-
-ENV DOCKER_HOST unix:///var/run/rce.sock
-
-RUN mkdir /app
-COPY ./app1 /app/app1
-COPY ./app2 /app/app2
-#COPY ./docker-compose.yml /app/docker-compose.yml
-WORKDIR /app
-
-
-# Install Go 1.4
-RUN mkdir -p /kubernetes
-RUN cd /kubernetes \
-	&& curl -L https://github.com/pcarranzav/go/releases/download/qemu1.4/go1.4-qemu.tar.gz > go.tar.gz  \
-	&& tar -xzf go.tar.gz \
-	&& ln -s /kubernetes/go/bin/linux_arm/go /usr/bin/go \
-	&& ln -s /kubernetes/go/bin/linux_arm/gofmt /usr/bin/gofmt
-
-#COPY ./linux_arm /kubernetes/go/pkg/tool/linux_arm
-
-ENV GOROOT /kubernetes/go
-
-#ENV FLANNEL_VERSION v0.4.1
-
-#RUN cd /kubernetes \
-#	&& curl -L https://github.com/coreos/flannel/archive/$FLANNEL_VERSION.tar.gz > $FLANNEL_VERSION.tar.gz  \
-#	&& tar -xzf $FLANNEL_VERSION.tar.gz \
-#	&& cd /kubernetes/flannel* \
-#	&& ./build \
-#	&& mv ./bin/flanneld /
-
-ENV KUBERNETES_VERSION v0.18.1
-#RUN cd /kubernetes \
-#	&& curl -L https://github.com/GoogleCloudPlatform/kubernetes/archive/$KUBERNETES_VERSION.tar.gz > $KUBERNETES_VERSION.tar.gz  \
-#	&& tar -xzf $KUBERNETES_VERSION.tar.gz \
-#	&& cd /kubernetes/kubernetes* \
-#	&& make \
-#	&& cp ./_output/local/bin/linux/arm/hyperkube / \
-#	&& cp ./_output/local/bin/linux/arm/kubectl /
-
+# Install kubernetes and flannel binaries
 COPY ./hyperkube /hyperkube
 COPY ./kubectl /kubectl
 COPY ./flanneld /flanneld
@@ -68,7 +32,12 @@ RUN chmod +x /hyperkube
 RUN chmod +x /kubectl
 RUN chmod +x /flanneld
 
+# Install the startup script.
+ADD ./start.sh /usr/bin/start.sh
+RUN chmod +x /usr/bin/start.sh
+
 # Define additional metadata for our image.
 VOLUME /var/lib/rce
 RUN ln -s /var/lib/rce /var/lib/docker
-CMD ["wraprce"]
+
+CMD ["start.sh"]

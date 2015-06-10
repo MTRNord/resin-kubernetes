@@ -90,7 +90,7 @@ popd >/dev/null
 # delete it so that rce can start.
 rm -rf /var/run/rce.pid
 
-# We should start flannel here
+# Start the flannel daemon
 rm -rf /run/flannel/subnet.env
 /flanneld --etcd-endpoints="http://${MASTER_IP}:4001" &
 while [ ! -f /run/flannel/subnet.env ]
@@ -98,7 +98,12 @@ do
 	sleep 1
 done 
 
+# Get the subnet configuration from flannel
 source /run/flannel/subnet.env
+
+# Start the rce daemon using flannel's network configuration
+ifconfig rce0 down
+brctl delbr rce0
 
 if [ "$LOG" == "file" ]
 then
@@ -116,17 +121,11 @@ do
 	sleep 1
 done
 
-#if [ -e "docker-compose.yml" ]
-#then
-#	DOCKER_HOST=unix:///var/run/rce.sock docker-compose up -d
-#fi
-
-#[[ $1 ]] && exec "$@"
-
-/hyperkube kubelet --api_servers=http://${MASTER_IP}:8080 --v=2 \
+# Start the kubernetes worker node
+/hyperkube kubelet --api_servers=http://${MASTER_IP}:8080 --v=1 \
 	--address=0.0.0.0 --enable_server --docker-endpoint=$DOCKER_HOST &
 
-/hyperkube proxy --master=http://${MASTER_IP}:8080 --v=2 &
+/hyperkube proxy --master=http://${MASTER_IP}:8080 --v=1 &
 
 #Set the root password as root if not set as an ENV variable
 export PASSWD=${PASSWD:=root}
