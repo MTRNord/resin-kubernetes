@@ -1,5 +1,5 @@
 FROM resin/rpi-raspbian
-MAINTAINER abresas@resin.io
+MAINTAINER pablo@resin.io
 
 ENV DOCKER_HOST unix:///var/run/rce.sock
 ENV FLANNEL_VERSION v0.4.1
